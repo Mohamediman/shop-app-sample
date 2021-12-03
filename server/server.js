@@ -6,6 +6,7 @@ import Shopify, { ApiVersion } from "@shopify/shopify-api";
 import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
+const koaBody = require("koa-body");
 
 //===Temp
 var cors = require("cors");
@@ -33,7 +34,7 @@ Shopify.Context.initialize({
 // persist this object in your app.
 const ACTIVE_SHOPIFY_SHOPS = {};
 
-app.use(cors());
+// app.use(cors());
 
 app.prepare().then(async () => {
   const server = new Koa();
@@ -68,6 +69,10 @@ app.prepare().then(async () => {
     })
   );
 
+  //===== Cors ===
+  // server.use(cors());
+
+  //==== Handling requests =====
   const handleRequest = async (ctx) => {
     await handle(ctx.req, ctx.res);
     ctx.respond = false;
@@ -89,8 +94,26 @@ app.prepare().then(async () => {
     try {
       ctx.body = {
         status: "success",
-        data: "products From the API call....",
+        data: products,
       };
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  router.post("/api/products", koaBody(), async (ctx) => {
+    try {
+      const body = ctx.request.body;
+      await products.push(body);
+      ctx.body = "Item Added";
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.delete("/api/products", koaBody(), async (ctx) => {
+    try {
+      products = [];
+      ctx.body = "All items deleted!";
     } catch (error) {
       console.log(error);
     }
@@ -111,6 +134,7 @@ app.prepare().then(async () => {
 
     // This shop hasn't been seen yet, go through OAuth to create a session
     if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
+      // ctx.redirect(`/`);
       ctx.redirect(`/auth?shop=${shop}`);
     } else {
       await handleRequest(ctx);
