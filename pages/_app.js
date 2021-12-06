@@ -9,6 +9,8 @@ import { Redirect } from "@shopify/app-bridge/actions";
 import "@shopify/polaris/dist/styles.css";
 import translations from "@shopify/polaris/locales/en.json";
 
+///============== sending the call from the front-end with
+//=============== the session token in the header
 function userLoggedInFetch(app) {
   const fetchFunction = authenticatedFetch(app);
 
@@ -32,10 +34,10 @@ function userLoggedInFetch(app) {
 }
 
 function MyProvider(props) {
-  const app = useAppBridge();
+  const app = useAppBridge(); //====> Authentication step#1
 
   const client = new ApolloClient({
-    fetch: userLoggedInFetch(app),
+    fetch: userLoggedInFetch(app), //====> Authentication step#1
     fetchOptions: {
       credentials: "include",
     },

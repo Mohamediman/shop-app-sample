@@ -69,9 +69,6 @@ app.prepare().then(async () => {
     })
   );
 
-  //===== Cors ===
-  // server.use(cors());
-
   //==== Handling requests =====
   const handleRequest = async (ctx) => {
     await handle(ctx.req, ctx.res);
@@ -89,6 +86,7 @@ app.prepare().then(async () => {
   });
 
   let products = [];
+  console.log(products)
   //====== Public API ======
   router.get("/api/products", async (ctx) => {
     try {
@@ -96,6 +94,7 @@ app.prepare().then(async () => {
         status: "success",
         data: products,
       };
+      console.log('products after the call:', products)
     } catch (error) {
       console.log(error);
     }

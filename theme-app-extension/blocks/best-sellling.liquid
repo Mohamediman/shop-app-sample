@@ -1,0 +1,67 @@
+{{ 'best-selling.css' | asset_url | stylesheet_tag }}
+
+<!-- {% render "bestSelling" %} -->
+<div class="snippet-wrapper">
+    <div class="best-selling hide">
+        <h3>{{ block.settings.heading }}</h3>
+        {% assign collection = block.settings.collection %}
+        {% for product in collection.products %}
+        <a href="{{product.url}}" style="padding: 20px 0;">
+          {%- if product.featured_image != blank -%}
+            <img src="{{product.featured_image.src | img_url: 'large', scale: 2,
+            crop: 'center'}}" alt="{{product.title | escape}}" height="300" width="50"/>
+            {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+            <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
+                <p style="padding: 0 10px;">{{ product.title | escape }}</p>
+                <p>{{product.price | money }}</p>
+            </div>
+        </a>
+        {% endfor %}
+
+    </div>
+    
+     <button class="bestSellerButton" style="color: {{block.settings.text_color}}; background-color: {{block.settings.bg_color}};"> {{ block.settings.btn_title }} </button>
+    
+</div>
+
+<script src="{{ 'best-selling.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+    "name": "Best Selling products", 
+    "target": "body",
+    "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Choose a collection"
+    },
+    {
+        "id": "heading",
+        "type": "text",
+        "label": "Heading",
+        "default": "Our Best Sellers"
+      },
+      {
+        "id": "btn_title",
+        "type": "text",
+        "label": "button text",
+        "default": "Best Sellers"
+      },
+    {
+        "type": "color",
+        "id": "text_color",
+        "label": "Button text color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "button background color",
+        "default": "#ffffff"
+      }
+    ] 
+} 
+{% endschema %}
